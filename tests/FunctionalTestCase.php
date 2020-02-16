@@ -13,10 +13,8 @@ class FunctionalTestCase extends \Orchestra\Testbench\TestCase
     {
         $app['config']->set('database.default', 'testing');
 
-        $app['config']->set('laravel-webhooks.stripe.config', [
-            'signing_secrets' => [
-                'default' => '123456789',
-            ],
+        $app['config']->set('laravel-webhooks.stripe.config.signing_secrets', [
+            'default' => '123456789',
         ]);
     }
 

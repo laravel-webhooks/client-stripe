@@ -21,7 +21,7 @@ class ExceptionsTest extends FunctionalTestCase
 
         $this->withoutExceptionHandling();
 
-        Route::stripeWebhooks('/webhooks/stripe/{signingKey?}');
+        Route::stripeWebhooks('/webhooks/stripe/{signingKey?}')->name('webhooks.stripe.handle');
     }
 
     /** @test */
@@ -34,7 +34,7 @@ class ExceptionsTest extends FunctionalTestCase
         $headers = [];
 
         // Act
-        $this->postJson(url('/webhooks/stripe'), [], $headers);
+        $this->postJson(route('webhooks.stripe.handle'), [], $headers);
     }
 
     /** @test */
@@ -47,7 +47,7 @@ class ExceptionsTest extends FunctionalTestCase
         $headers = ['Stripe-Signature' => '123456789'];
 
         // Act
-        $this->postJson(url('/webhooks/stripe'), [], $headers);
+        $this->postJson(route('webhooks.stripe.handle'), [], $headers);
     }
 
     /** @test */
@@ -62,7 +62,7 @@ class ExceptionsTest extends FunctionalTestCase
         $headers = ['Stripe-Signature' => $this->generateSignature($payload)];
 
         // Act
-        $this->postJson(url('/webhooks/stripe'), [], $headers);
+        $this->postJson(route('webhooks.stripe.handle'), [], $headers);
     }
 
     /** @test */
