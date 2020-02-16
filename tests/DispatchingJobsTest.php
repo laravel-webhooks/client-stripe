@@ -25,7 +25,7 @@ class DispatchingJobsTest extends FunctionalTestCase
     }
 
     /** @test */
-    public function job_will_be_dispatched_if_the_type_is_defined()
+    public function request_will_be_stored_and_the_job_will_be_dispatched_when_the_type_is_defined()
     {
         // Arrange
         Bus::fake();
@@ -50,7 +50,7 @@ class DispatchingJobsTest extends FunctionalTestCase
     }
 
     /** @test */
-    public function job_will_not_be_dispatched_if_the_type_is_not_defined()
+    public function request_will_be_stored_but_the_job_will_not_be_dispatched_when_the_type_is_not_defined()
     {
         // Arrange
         Bus::fake();
@@ -65,7 +65,7 @@ class DispatchingJobsTest extends FunctionalTestCase
         // Assert
         $response->assertStatus(Response::HTTP_OK);
 
-        $this->assertCount(0, WebhookReceived::get());
+        $this->assertCount(1, WebhookReceived::get());
 
         Bus::assertNotDispatched(ChargeFailedDummyJob::class);
     }
