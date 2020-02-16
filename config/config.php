@@ -25,7 +25,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Webhook Events Jobs
+    | Webhook Jobs
     |--------------------------------------------------------------------------
     |
     | Define here the jobs that should be dispatched for
