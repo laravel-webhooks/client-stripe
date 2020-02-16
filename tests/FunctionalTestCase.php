@@ -9,6 +9,16 @@ class FunctionalTestCase extends \Orchestra\Testbench\TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->artisan('migrate', ['--database' => 'testing'])->run();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('database.default', 'testing');
@@ -47,5 +57,25 @@ class FunctionalTestCase extends \Orchestra\Testbench\TestCase
         $signature = hash_hmac('sha256', $signedPayload, $secret);
 
         return "t={$timestamp},v1={$signature}";
+    }
+
+    /**
+     * Reads the contents of the given test fixture.
+     *
+     * @param string $name
+     *
+     * @throws \Exception
+     *
+     * @return array
+     */
+    protected function loadFixture(string $name): array
+    {
+        $file = __DIR__."/fixtures/{$name}.json";
+
+        if (file_exists($file)) {
+            return json_decode(file_get_contents($file), true);
+        }
+
+        throw new \Exception('Fixture was not found!');
     }
 }

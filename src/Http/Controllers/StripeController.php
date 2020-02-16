@@ -43,6 +43,6 @@ class StripeController extends WebhookClientController
      */
     public function getDefinedJobs(): array
     {
-        return config('laravel-webhooks.stripe.jobs', []);
+        return config('laravel-webhooks.stripe.config.jobs', []);
     }
 }
