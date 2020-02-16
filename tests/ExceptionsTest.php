@@ -8,16 +8,20 @@ use Illuminate\Support\Facades\Route;
 use LaravelWebhooks\Client\Exceptions\InvalidRequest;
 use LaravelWebhooks\Client\Exceptions\InvalidSignature;
 use LaravelWebhooks\Client\Stripe\Exceptions\MissingSignature;
+use LaravelWebhooks\Client\Stripe\Exceptions\SigningKeyConfigNotFound;
 
-class StripeTest extends FunctionalTestCase
+class ExceptionsTest extends FunctionalTestCase
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->withoutExceptionHandling();
 
-        Route::stripeWebhooks('/webhooks/stripe');
+        Route::stripeWebhooks('/webhooks/stripe/{signingKey?}');
     }
 
     /** @test */
@@ -59,5 +63,20 @@ class StripeTest extends FunctionalTestCase
 
         // Act
         $this->postJson(url('/webhooks/stripe'), [], $headers);
+    }
+
+    /** @test */
+    public function an_exception_will_be_thrown_when_the_signing_key_configuration_is_not_found()
+    {
+        // Arrange
+        $this->expectException(SigningKeyConfigNotFound::class);
+        $this->expectExceptionMessage('The configuration for the `other-signing-key` signing key was not found.');
+
+        $payload = [];
+
+        $headers = ['Stripe-Signature' => $this->generateSignature($payload)];
+
+        // Act
+        $this->postJson(url('/webhooks/stripe/other-signing-key'), [], $headers);
     }
 }

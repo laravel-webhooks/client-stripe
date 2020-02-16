@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use LaravelWebhooks\Client\Stripe\Exceptions\InvalidSignature;
 use LaravelWebhooks\Client\Stripe\Exceptions\MissingSignature;
+use LaravelWebhooks\Client\Stripe\Exceptions\SigningKeyConfigNotFound;
 
 class StripeVerifySignature
 {
@@ -58,6 +59,8 @@ class StripeVerifySignature
      *
      * @param \Illuminate\Http\Request $request
      *
+     * @throws \LaravelWebhooks\Client\Stripe\Exceptions\SigningKeyConfigNotFound
+     *
      * @return string
      */
     protected function getSigningSecret(Request $request): string
@@ -66,7 +69,11 @@ class StripeVerifySignature
 
         $signingKey = $request->route('signingKey') ?? 'default';
 
-        return $secrets[$signingKey] ?? $secrets[0];
+        if (! isset($secrets[$signingKey])) {
+            throw new SigningKeyConfigNotFound($signingKey);
+        }
+
+        return $secrets[$signingKey];
     }
 
     /**
