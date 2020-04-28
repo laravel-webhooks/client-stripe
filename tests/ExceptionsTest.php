@@ -21,7 +21,7 @@ class ExceptionsTest extends FunctionalTestCase
 
         $this->withoutExceptionHandling();
 
-        Route::stripeWebhooks('/webhooks/stripe/{signingKey?}')->name('webhooks.stripe.handle');
+        Route::stripeWebhook('/webhooks/stripe/{signingKey?}')->name('webhooks.stripe.handle');
     }
 
     /** @test */

@@ -19,7 +19,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->registerPublishing();
 
-        Route::macro('stripeWebhooks', function (string $url) {
+        Route::macro('stripeWebhook', function (string $url) {
             return Route::post($url, StripeController::class);
         });
     }

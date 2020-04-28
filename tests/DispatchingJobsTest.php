@@ -6,6 +6,7 @@ namespace LaravelWebhooks\Client\Stripe\Tests;
 
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 use LaravelWebhooks\Client\Models\WebhookReceived;
 use LaravelWebhooks\Client\Stripe\Tests\Dummies\ChargeFailedDummyJob;
@@ -21,7 +22,7 @@ class DispatchingJobsTest extends FunctionalTestCase
 
         $this->withoutExceptionHandling();
 
-        Route::stripeWebhooks('/webhooks/stripe')->name('webhooks.stripe.handle');
+        Route::stripeWebhook('/webhooks/stripe')->name('webhooks.stripe.handle');
     }
 
     /** @test */
@@ -30,9 +31,9 @@ class DispatchingJobsTest extends FunctionalTestCase
         // Arrange
         Bus::fake();
 
-        config(['laravel-webhooks.stripe.config.jobs' => [
+        Config::set('laravel-webhooks.stripe.config.jobs', [
             'charge.failed' => ChargeFailedDummyJob::class,
-        ]]);
+        ]);
 
         $payload = $this->loadFixture('charge.failed');
 
